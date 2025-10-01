@@ -1,12 +1,11 @@
 // components/Start.js
-// --- STEP 3: Create new file Start.js file add the following code. ---
+// --- STEP 2: Import necessary components ---
 // Import necessary components
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState('');
-    // ADD state for the choosen background color.
     const [color, setColor] = useState('');
 
     // Define the color choices from your design specifications
@@ -19,26 +18,33 @@ const Start = ({ navigation }) => {
 
 
     return (
-        // ADD ImageBackground to use an image as the screen background
         <ImageBackground
             source={require('../assets/background-image.png')} // Make sure you have this image in an 'assets' folder
             resizeMode="cover"
             style={styles.backgroundImage}
         >
-            {/* ADD the App Title */}
             <Text style={styles.appTitle}>ChatApp</Text>
 
-            {/* ADD a container for the user inputs */}
-            <View style={styles.inputContainer}>
+            {/* 
+            Wrap the input container in a KeyboardAvoidingView.
+            This component automatically adjusts its height, position, or bottom padding
+            based on the keyboard's height to ensure the UI is not obscured.
+            */}
+
+            <KeyboardAvoidingView
+                style={styles.inputContainer}
+                // --- The 'behavior' prop is set based on the operating system. ---
+                // --- 'padding' for iOS and 'height' for Android are common best practices. ---
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
                 {/* Your Name TextInput - Apply new styles */}
                 <TextInput
                     style={styles.textInput}
                     value={name}
                     onChangeText={setName}
                     placeholder='Your name'
-                    placeholderTextColor="#090C08" // Style the placeholder text
+                    placeholderTextColor="#757083" // Style the placeholder text
                 />
-
                 {/* ADD section for choosing background color */}
                 <Text style={styles.chooseColorText}>Choose background color:</Text>
                 <View style={styles.colorSelector}>
@@ -68,8 +74,10 @@ const Start = ({ navigation }) => {
                 >
                     <Text style={styles.startButtonText}>Start Chatting</Text>
                 </TouchableOpacity>
-            </View>
-        </ImageBackground>
+
+            </KeyboardAvoidingView>
+
+        </ImageBackground >
     );
 }
 
@@ -78,7 +86,7 @@ const styles = StyleSheet.create({
 
     backgroundImage: {
         flex: 1,
-        justifyContent: 'space-evenly', // Evenly distribute content vertically
+        justifyContent: 'space-around', // Evenly distribute content vertically
         alignItems: 'center',
     },
     appTitle: {
@@ -96,10 +104,10 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 15,
         borderWidth: 1,
-        borderColor: '#090C08',
+        borderColor: '#757083',
         fontSize: 16,
         fontWeight: '300',
-        color: '#090C08',
+        color: '#757083',
         opacity: 0.5,
         marginBottom: 15,
     },
@@ -110,28 +118,28 @@ const styles = StyleSheet.create({
         opacity: 1,
         marginBottom: 10,
     },
-     colorSelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginBottom: 20,
-  },
-  colorCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25, // Half of width/height to make it a circle
-  },
-  startButton: {
-    backgroundColor: '#757083',
-    width: '100%',
-    padding: 20,
-    alignItems: 'center',
-  },
-  startButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  }
+    colorSelector: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+        marginBottom: 20,
+    },
+    colorCircle: {
+        width: 50,
+        height: 50,
+        borderRadius: 25, // Half of width/height to make it a circle
+    },
+    startButton: {
+        backgroundColor: '#757083',
+        width: '100%',
+        padding: 20,
+        alignItems: 'center',
+    },
+    startButtonText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#FFFFFF',
+    }
 });
 
 export default Start;
