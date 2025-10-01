@@ -8,6 +8,11 @@ A mobile chat application built with React Native and Expo. This project allows 
 
 ![A demo showing the user flow from the Start screen to the Chat screen.](assets/5.1%20-%20Final%20Task%20Recording.gif)
 
+--------------------------------------------------------------------------
+![A demo showing changing Chat bubble messages.](assets/5.2%20-%20Final%20Results%20Customize%20Chat%20Bubble.gif)
+
+--------------------------------------------------------------------------
+
 ## Key Features
 
 - **Start Screen:** A welcoming screen where users can configure their chat experience.
