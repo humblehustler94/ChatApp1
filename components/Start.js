@@ -1,12 +1,22 @@
 // components/Start.js
-// --- STEP 2: Import necessary components ---
-// Import necessary components
+
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+
+// --------------------------------------------------
+// --- ADD: Import Firebase auth functions ---
+import { getAuth, signInAnonymously } from "firebase/auth";
+// --------------------------------------------------
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState('');
-    const [color, setColor] = useState('');
+    // --- UPDATE: Set a default color to avoid issues if none is selected ---
+    const [color, setColor] = useState('#090C08');
+
+    // --------------------------------------------------
+    // --- ADD: Initialize Firebase Auth ---
+    // --- This gives us access to the authentication methods. ---
+    const auth = getAuth();
 
     // Define the color choices from your design specifications
     const colors = {
@@ -15,6 +25,27 @@ const Start = ({ navigation }) => {
         grey: '#8A95A5',
         green: '#B9C6AE'
     };
+
+    // --------------------------------------------------
+    // --- ADD: Function to handle anonymous sign-in ---
+    const signInUser = () => {
+        signInAnonymously(auth)
+        .then(result => {
+            // --- Once signed in, navigate to the Chat screen ---
+            // --- Pass teh user's unique ID, naem, and selected color as params ---
+            navigation.navigate('Chat', {
+                userID: result.user.uid,
+                name: name,
+                color: color
+            });
+            Alert.alert("Signed in successfully!");
+        })
+        .catch((error) => {
+            Alert.alert("Unable to sign in, try again later.");
+            console.error(error);
+        })
+    }
+    // --------------------------------------------------
 
 
     return (
@@ -25,19 +56,10 @@ const Start = ({ navigation }) => {
         >
             <Text style={styles.appTitle}>ChatApp</Text>
 
-            {/* 
-            Wrap the input container in a KeyboardAvoidingView.
-            This component automatically adjusts its height, position, or bottom padding
-            based on the keyboard's height to ensure the UI is not obscured.
-            */}
-
             <KeyboardAvoidingView
                 style={styles.inputContainer}
-                // --- The 'behavior' prop is set based on the operating system. ---
-                // --- 'padding' for iOS and 'height' for Android are common best practices. ---
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                {/* Your Name TextInput - Apply new styles */}
                 <TextInput
                     style={styles.textInput}
                     value={name}
@@ -45,7 +67,7 @@ const Start = ({ navigation }) => {
                     placeholder='Your name'
                     placeholderTextColor="#757083" // Style the placeholder text
                 />
-                {/* ADD section for choosing background color */}
+            
                 <Text style={styles.chooseColorText}>Choose background color:</Text>
                 <View style={styles.colorSelector}>
                     <TouchableOpacity
@@ -66,11 +88,10 @@ const Start = ({ navigation }) => {
                     />
                 </View>
 
-                {/* CHANGE the Button to a styled TouchableOpacity */}
                 <TouchableOpacity
                     style={styles.startButton}
-                    // UPDATE onPress to pass both name AND color to the Chat screen
-                    onPress={() => navigation.navigate('Chat', { name: name, color: color })}
+                    // --- UPDATE: Call the new signInUser function on press ---
+                    onPress={signInUser}
                 >
                     <Text style={styles.startButtonText}>Start Chatting</Text>
                 </TouchableOpacity>
